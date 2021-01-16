@@ -17,13 +17,16 @@ $40 constant ADSC
     %10000111 ADCSRA c!
     0 ADMUX c! ;
 
+\ Начать оцифровку.
 : adc-start-conv ( -- ) 
     ADSC ADCSRA mset ;
 
+\ Подождать оцифровку.
 : adc-wait-conv ( -- )
     begin
     ADSC ADCSRA mtst 0= until ;
 
+\ Измерить напряжение на 0 канале.
 : adc-measure ( -- result)
     adc-start-conv
     adc-wait-conv

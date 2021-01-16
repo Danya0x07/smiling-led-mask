@@ -26,8 +26,8 @@ $2b constant PORTD
 
 \ Установить высокий лог. уровень на пине.
 : high ( pinmask portaddr -- )
-    mset ;
+    inline mset ;
 
 \ Установить низкий лог. уровень на пине.
 : low ( pinmask portaddr -- )
-    mclr ;
+    inline mclr ;

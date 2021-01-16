@@ -14,6 +14,7 @@ decimal
 5 constant num-pins  \ Кол-во пинов, к которым подключены светодиоды.
 2 constant fb-length  \ Длина фильтровочного буфера.
 
+flash
 PORTB 5 defpin: PB5
 PORTB 2 defpin: PB2
 PORTB 1 defpin: PB1
@@ -22,9 +23,14 @@ PORTD 7 defpin: PD7
 
 create led-pins ' PB5 , ' PB2 , ' PB1 , ' PB0 , ' PD7 ,
 create thresholds 20 , 100 , 240 , 360 , 400 ,  \ Громкостные пороги
+ram
 
 create filter-buff fb-length cells allot
 variable idx
+
+\ Преобразовать значение с АЦП в условную громкость
+: get-volume ( adc -- volume)
+    512 - abs ;
 
 \ Фильтр "скользящее среднее"
 : filter ( volume -- filtered )
@@ -55,4 +61,19 @@ variable idx
     next 
     drop ;
 
+: main
+    adc-init
 
+    PB5 mode-output
+    PB2 mode-output
+    PB1 mode-output
+    PB0 mode-output
+    PD7 mode-output
+
+    begin
+        adc-measure
+        get-volume
+        filter
+        smile
+        20 ms
+    again ;
